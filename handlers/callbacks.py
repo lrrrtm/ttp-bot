@@ -1,4 +1,5 @@
 from datetime import datetime
+import html
 from aiogram import types
 from loader import dp, bot
 from database import crud
@@ -48,12 +49,12 @@ async def callback_handler(call: types.CallbackQuery):
         app_id, body_text = await ensure_application_exists(call)
         
         # Форматируем текст заявки как цитату
-        quoted_body = "\n".join([f"> {line}" for line in body_text.split("\n")])
+        safe_body = html.escape(body_text)
 
         new_text = (
             f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n"
-            f"{quoted_body}\n\n"
-            f"В работе: [{user_id}](tg://user?id={user_id})"
+            f"<blockquote>{safe_body}</blockquote>\n\n"
+            f"В работе: <a href='tg://user?id={user_id}'>{user_id}</a>"
         )
 
         sent = await bot.send_message(
@@ -61,7 +62,7 @@ async def callback_handler(call: types.CallbackQuery):
             new_text,
             message_thread_id=TOPIC_IN_WORK_ID,
             reply_markup=inline.get_in_work_keyboard(app_id),
-            parse_mode="Markdown"
+            parse_mode="HTML"
         )
 
         try:
@@ -90,20 +91,20 @@ async def callback_handler(call: types.CallbackQuery):
         app_id, body_text = await ensure_application_exists(call)
 
         # Форматируем текст заявки как цитату
-        quoted_body = "\n".join([f"> {line}" for line in body_text.split("\n")])
+        safe_body = html.escape(body_text)
 
         text = (
             f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n"
-            f"{quoted_body}\n\n"
+            f"<blockquote>{safe_body}</blockquote>\n\n"
             f"❌ Отклонена до рассмотрения модератором "
-            f"[{user_id}](tg://user?id={user_id})"
+            f"<a href='tg://user?id={user_id}'>{user_id}</a>"
         )
 
         await bot.send_message(
             GROUP_CHAT_ID,
             text,
             message_thread_id=TOPIC_DECLINED_ID,
-            parse_mode="Markdown"
+            parse_mode="HTML"
         )
 
         try:
@@ -148,20 +149,20 @@ async def callback_handler(call: types.CallbackQuery):
         app_id, body_text = await ensure_application_exists(call)
         
         # Форматируем текст заявки как цитату
-        quoted_body = "\n".join([f"> {line}" for line in body_text.split("\n")])
+        safe_body = html.escape(body_text)
 
         approved_text = (
             f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n"
-            f"{quoted_body}\n\n"
+            f"<blockquote>{safe_body}</blockquote>\n\n"
             f"✅ Одобрена администратором "
-            f"[{user_id}](tg://user?id={user_id})"
+            f"<a href='tg://user?id={user_id}'>{user_id}</a>"
         )
 
         await bot.send_message(
             GROUP_CHAT_ID,
             approved_text,
             message_thread_id=TOPIC_APPROVED_ID,
-            parse_mode="Markdown"
+            parse_mode="HTML"
         )
 
         try:
@@ -181,20 +182,20 @@ async def callback_handler(call: types.CallbackQuery):
         app_id, body_text = await ensure_application_exists(call)
         
         # Форматируем текст заявки как цитату
-        quoted_body = "\n".join([f"> {line}" for line in body_text.split("\n")])
+        safe_body = html.escape(body_text)
 
         declined_text = (
             f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n"
-            f"{quoted_body}\n\n"
+            f"<blockquote>{safe_body}</blockquote>\n\n"
             f"❌ Отклонена после рассмотрения администратором "
-            f"[{user_id}](tg://user?id={user_id})"
+            f"<a href='tg://user?id={user_id}'>{user_id}</a>"
         )
 
         await bot.send_message(
             GROUP_CHAT_ID,
             declined_text,
             message_thread_id=TOPIC_DECLINED_ID,
-            parse_mode="Markdown"
+            parse_mode="HTML"
         )
 
         try:

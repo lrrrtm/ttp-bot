@@ -1,3 +1,4 @@
+import html
 from aiogram import types
 from loader import dp, bot
 from database import crud
@@ -58,20 +59,20 @@ async def handle_private(message: types.Message):
             report_q3=q3,
         )
 
-        mention_mod = f"[{message.from_user.id}](tg://user?id={message.from_user.id})"
+        mention_mod = f"<a href='tg://user?id={message.from_user.id}'>{message.from_user.id}</a>"
         resp_mentions = " ".join(RESPONSIBLE_USERNAMES) if RESPONSIBLE_USERNAMES else ""
         
         # Форматируем текст заявки как цитату
-        quoted_body = "\n".join([f"> {line}" for line in app.text.split("\n")])
+        safe_body = html.escape(app.text)
         
         text = (
             f"{resp_mentions}\n\n"
             f"Заявка #{app_id}\n\n"
-            f"{quoted_body}\n\n"
+            f"<blockquote>{safe_body}</blockquote>\n\n"
             f"Отчёт модератора {mention_mod}:\n\n"
-            f"1️⃣ Укажите количество верных ответов:\n{q1}\n\n"
-            f"2️⃣ Комментарий по прошедшему обзвону:\n{q2}\n\n"
-            f"3️⃣ Ссылка на запись обзвона:\n{q3}"
+            f"1️⃣ Укажите количество верных ответов:\n{html.escape(q1)}\n\n"
+            f"2️⃣ Комментарий по прошедшему обзвону:\n{html.escape(q2)}\n\n"
+            f"3️⃣ Ссылка на запись обзвона:\n{html.escape(q3)}"
         )
 
         sent = await bot.send_message(
@@ -79,7 +80,7 @@ async def handle_private(message: types.Message):
             text,
             message_thread_id=TOPIC_AWAIT_REVIEW_ID,
             reply_markup=inline.get_review_keyboard(app_id),
-            parse_mode="Markdown"
+            parse_mode="HTML"
         )
 
         try:
