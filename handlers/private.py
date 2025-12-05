@@ -78,6 +78,11 @@ async def handle_private(message: types.Message):
             parse_mode="Markdown"
         )
 
+        try:
+            await bot.delete_message(app.chat_id, app.message_id)
+        except Exception:
+            pass
+
         await crud.update_application(
             app_id,
             chat_id=sent.chat.id,
