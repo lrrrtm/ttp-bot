@@ -59,7 +59,7 @@ async def handle_private(message: types.Message):
             report_q3=q3,
         )
 
-        mention_mod = f"<a href='tg://user?id={message.from_user.id}'>{message.from_user.id}</a>"
+        mention_mod = f"@{message.from_user.username}" if message.from_user.username else f"<a href='tg://user?id={message.from_user.id}'>{message.from_user.id}</a>"
         resp_mentions = " ".join(RESPONSIBLE_USERNAMES) if RESPONSIBLE_USERNAMES else ""
         
         # Форматируем текст заявки как цитату

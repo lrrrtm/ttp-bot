@@ -50,11 +50,14 @@ async def callback_handler(call: types.CallbackQuery):
         
         # Форматируем текст заявки как цитату
         safe_body = html.escape(body_text)
+        
+        # Формируем упоминание
+        mention = f"@{call.from_user.username}" if call.from_user.username else f"<a href='tg://user?id={user_id}'>{user_id}</a>"
 
         new_text = (
             f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n"
             f"<blockquote>{safe_body}</blockquote>\n\n"
-            f"В работе: <a href='tg://user?id={user_id}'>{user_id}</a>"
+            f"В работе: {mention}"
         )
 
         sent = await bot.send_message(
@@ -92,12 +95,15 @@ async def callback_handler(call: types.CallbackQuery):
 
         # Форматируем текст заявки как цитату
         safe_body = html.escape(body_text)
+        
+        # Формируем упоминание
+        mention = f"@{call.from_user.username}" if call.from_user.username else f"<a href='tg://user?id={user_id}'>{user_id}</a>"
 
         text = (
             f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n"
             f"<blockquote>{safe_body}</blockquote>\n\n"
             f"❌ Отклонена до рассмотрения модератором "
-            f"<a href='tg://user?id={user_id}'>{user_id}</a>"
+            f"{mention}"
         )
 
         await bot.send_message(
@@ -157,16 +163,23 @@ async def callback_handler(call: types.CallbackQuery):
         q2 = html.escape(app.report_q2 or "-")
         q3 = html.escape(app.report_q3 or "-")
         mod_id = app.moderator_id
+        
+        # Получаем юзернейм модератора
+        mod_user = await crud.get_user(mod_id)
+        mod_mention = f"@{mod_user.username}" if mod_user and mod_user.username else f"<a href='tg://user?id={mod_id}'>{mod_id}</a>"
+        
+        # Упоминание админа
+        admin_mention = f"@{call.from_user.username}" if call.from_user.username else f"<a href='tg://user?id={user_id}'>{user_id}</a>"
 
         approved_text = (
             f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n"
             f"<blockquote>{safe_body}</blockquote>\n\n"
-            f"Отчёт модератора <a href='tg://user?id={mod_id}'>{mod_id}</a>:\n\n"
+            f"Отчёт модератора {mod_mention}:\n\n"
             f"1️⃣ Укажите количество верных ответов:\n{q1}\n\n"
             f"2️⃣ Комментарий по прошедшему обзвону:\n{q2}\n\n"
             f"3️⃣ Ссылка на запись обзвона:\n{q3}\n\n"
             f"✅ Одобрена администратором "
-            f"<a href='tg://user?id={user_id}'>{user_id}</a>"
+            f"{admin_mention}"
         )
 
         await bot.send_message(
@@ -194,12 +207,15 @@ async def callback_handler(call: types.CallbackQuery):
         
         # Форматируем текст заявки как цитату
         safe_body = html.escape(body_text)
+        
+        # Упоминание админа
+        admin_mention = f"@{call.from_user.username}" if call.from_user.username else f"<a href='tg://user?id={user_id}'>{user_id}</a>"
 
         declined_text = (
             f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n"
             f"<blockquote>{safe_body}</blockquote>\n\n"
             f"❌ Отклонена после рассмотрения администратором "
-            f"<a href='tg://user?id={user_id}'>{user_id}</a>"
+            f"{admin_mention}"
         )
 
         await bot.send_message(
