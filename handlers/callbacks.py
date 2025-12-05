@@ -47,6 +47,7 @@ async def callback_handler(call: types.CallbackQuery):
             return
 
         app_id, body_text = await ensure_application_exists(call)
+        app = await crud.get_application(app_id)
         
         # Форматируем текст заявки как цитату
         safe_body = html.escape(body_text)
@@ -59,13 +60,17 @@ async def callback_handler(call: types.CallbackQuery):
             f"<blockquote>{safe_body}</blockquote>\n\n"
             f"В работе: {mention}"
         )
+        
+        if app and app.spreadsheet_link:
+            new_text += f"\n\n<a href='{app.spreadsheet_link}'>📑 Открыть в таблице</a>"
 
         sent = await bot.send_message(
             GROUP_CHAT_ID,
             new_text,
             message_thread_id=TOPIC_IN_WORK_ID,
             reply_markup=inline.get_in_work_keyboard(app_id),
-            parse_mode="HTML"
+            parse_mode="HTML",
+            disable_web_page_preview=True
         )
 
         try:
@@ -92,6 +97,7 @@ async def callback_handler(call: types.CallbackQuery):
             return
 
         app_id, body_text = await ensure_application_exists(call)
+        app = await crud.get_application(app_id)
 
         # Форматируем текст заявки как цитату
         safe_body = html.escape(body_text)
@@ -105,12 +111,16 @@ async def callback_handler(call: types.CallbackQuery):
             f"❌ Отклонена до рассмотрения модератором "
             f"{mention}"
         )
+        
+        if app and app.spreadsheet_link:
+            text += f"\n\n<a href='{app.spreadsheet_link}'>📑 Открыть в таблице</a>"
 
         await bot.send_message(
             GROUP_CHAT_ID,
             text,
             message_thread_id=TOPIC_DECLINED_ID,
-            parse_mode="HTML"
+            parse_mode="HTML",
+            disable_web_page_preview=True
         )
 
         try:
@@ -181,12 +191,16 @@ async def callback_handler(call: types.CallbackQuery):
             f"✅ Одобрена администратором "
             f"{admin_mention}"
         )
+        
+        if app and app.spreadsheet_link:
+            approved_text += f"\n\n<a href='{app.spreadsheet_link}'>📑 Открыть в таблице</a>"
 
         await bot.send_message(
             GROUP_CHAT_ID,
             approved_text,
             message_thread_id=TOPIC_APPROVED_ID,
-            parse_mode="HTML"
+            parse_mode="HTML",
+            disable_web_page_preview=True
         )
 
         try:
@@ -217,12 +231,16 @@ async def callback_handler(call: types.CallbackQuery):
             f"❌ Отклонена после рассмотрения администратором "
             f"{admin_mention}"
         )
+        
+        if app and app.spreadsheet_link:
+            declined_text += f"\n\n<a href='{app.spreadsheet_link}'>📑 Открыть в таблице</a>"
 
         await bot.send_message(
             GROUP_CHAT_ID,
             declined_text,
             message_thread_id=TOPIC_DECLINED_ID,
-            parse_mode="HTML"
+            parse_mode="HTML",
+            disable_web_page_preview=True
         )
 
         try:

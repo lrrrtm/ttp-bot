@@ -74,13 +74,17 @@ async def handle_private(message: types.Message):
             f"2️⃣ Комментарий по прошедшему обзвону:\n{html.escape(q2)}\n\n"
             f"3️⃣ Ссылка на запись обзвона:\n{html.escape(q3)}"
         )
+        
+        if app.spreadsheet_link:
+            text += f"\n\n<a href='{app.spreadsheet_link}'>📑 Открыть в таблице</a>"
 
         sent = await bot.send_message(
             GROUP_CHAT_ID,
             text,
             message_thread_id=TOPIC_AWAIT_REVIEW_ID,
             reply_markup=inline.get_review_keyboard(app_id),
-            parse_mode="HTML"
+            parse_mode="HTML",
+            disable_web_page_preview=True
         )
 
         try:

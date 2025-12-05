@@ -30,7 +30,8 @@ async def receive_webhook(request: Request):
         )
         
         if row_link:
-            text += f"\n\n<a href='{row_link}'>📑 Открыть в таблице</a>"
+            # text += f"\n\n<a href='{row_link}'>📑 Открыть в таблице</a>"
+            pass
 
         # 1. Создаем заявку в БД (пока без message_id)
         app_id = await crud.create_application(
@@ -48,13 +49,16 @@ async def receive_webhook(request: Request):
 
         # 2. Отправляем сообщение в Telegram
         new_text = f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n{text}"
+        if row_link:
+            new_text += f"\n\n<a href='{row_link}'>📑 Открыть в таблице</a>"
         
         sent_message = await bot.send_message(
             chat_id=GROUP_CHAT_ID,
             text=new_text,
             message_thread_id=TOPIC_NEW_ID,
             reply_markup=inline.get_new_app_keyboard(app_id),
-            parse_mode="HTML"
+            parse_mode="HTML",
+            disable_web_page_preview=True
         )
 
         # 3. Обновляем message_id в БД
