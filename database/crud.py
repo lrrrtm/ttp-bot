@@ -100,6 +100,8 @@ async def create_application(text, chat_id, topic_id, message_id):
         await session.commit()
         await session.refresh(app)
         return app.id
+        await session.refresh(app)
+        return app.id
 
 async def get_application_by_message_id(message_id):
     async with get_session() as session:
