@@ -15,15 +15,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            # Переходим в папку проекта (замените путь на свой)
             cd /root/ttp-bot
-            
-            # Обновляем код
             git pull
-            
-            # Обновляем .env файл из секретов GitHub (чтобы не хранить его на сервере вручную)
-            echo "${{ secrets.ENV_FILE }}" > .env
-            
-            # Пересобираем и перезапускаем
             docker-compose down
             docker-compose up -d --build
