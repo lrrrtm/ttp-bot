@@ -147,13 +147,24 @@ async def callback_handler(call: types.CallbackQuery):
             return
 
         app_id, body_text = await ensure_application_exists(call)
+        app = await crud.get_application(app_id)
         
         # Форматируем текст заявки как цитату
         safe_body = html.escape(body_text)
+        
+        # Данные отчета
+        q1 = html.escape(app.report_q1 or "-")
+        q2 = html.escape(app.report_q2 or "-")
+        q3 = html.escape(app.report_q3 or "-")
+        mod_id = app.moderator_id
 
         approved_text = (
             f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n"
             f"<blockquote>{safe_body}</blockquote>\n\n"
+            f"Отчёт модератора <a href='tg://user?id={mod_id}'>{mod_id}</a>:\n\n"
+            f"1️⃣ Укажите количество верных ответов:\n{q1}\n\n"
+            f"2️⃣ Комментарий по прошедшему обзвону:\n{q2}\n\n"
+            f"3️⃣ Ссылка на запись обзвона:\n{q3}\n\n"
             f"✅ Одобрена администратором "
             f"<a href='tg://user?id={user_id}'>{user_id}</a>"
         )
