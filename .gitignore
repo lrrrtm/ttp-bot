@@ -41,5 +41,3 @@ bot.db
 # OS
 .DS_Store
 Thumbs.db
-
-test_webhook.py
