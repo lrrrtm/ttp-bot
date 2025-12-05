@@ -1,7 +1,9 @@
 name: Deploy to Server
 
 on:
-  workflow_dispatch:  # Запуск вручную по кнопке
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
