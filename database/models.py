@@ -22,6 +22,14 @@ class Application(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     text = Column(Text)
+    
+    # Чистые данные
+    nickname = Column(String(255), nullable=True)
+    server = Column(String(255), nullable=True)
+    realname = Column(String(255), nullable=True)
+    age = Column(String(50), nullable=True)
+    contact = Column(String(255), nullable=True)
+
     status = Column(String(50))
     moderator_id = Column(BigInteger, nullable=True)
     

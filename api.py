@@ -33,7 +33,12 @@ async def receive_webhook(request: Request):
             text=text,
             chat_id=GROUP_CHAT_ID,
             topic_id=TOPIC_NEW_ID,
-            message_id=0  # Будет обновлено после отправки сообщения
+            message_id=0,  # Будет обновлено после отправки сообщения
+            nickname=nickname,
+            server=server,
+            realname=realname,
+            age=age,
+            contact=contact
         )
 
         # 2. Отправляем сообщение в Telegram
