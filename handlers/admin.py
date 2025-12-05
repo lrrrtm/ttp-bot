@@ -72,7 +72,8 @@ async def cmd_stats(message: types.Message):
         text.append("нет данных.")
     else:
         for moderator_id, cnt in rows:
-            mention = f"[{moderator_id}](tg://user?id={moderator_id})"
+            user = await crud.get_user(moderator_id)
+            mention = f"@{user.username}" if user and user.username else f"[{moderator_id}](tg://user?id={moderator_id})"
             text.append(f"{mention} — {cnt} заявок")
 
     await message.reply("\n".join(text), parse_mode="Markdown")
