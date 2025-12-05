@@ -25,7 +25,7 @@ async def cmd_roles(message: types.Message):
         target_id = int(target)
     except ValueError:
         await message.reply(
-            "В этой версии нужно указывать именно числовой user_id.\n"
+            "В этой версии нужно указывать именно чи1словой user_id.\n"
             "Его можно узнать через бота @userinfobot."
         )
         return
