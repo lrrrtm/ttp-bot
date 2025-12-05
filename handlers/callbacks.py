@@ -19,7 +19,7 @@ async def ensure_application_exists(call: types.CallbackQuery):
     # Ищем заявку по message_id
     app = await crud.get_application_by_message_id(message.message_id)
     if app:
-        return app.id, body_text
+        return app.id, app.text
 
     # Создаём новую заявку
     app_id = await crud.create_application(
