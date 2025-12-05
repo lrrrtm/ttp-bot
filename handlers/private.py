@@ -60,10 +60,14 @@ async def handle_private(message: types.Message):
 
         mention_mod = f"[{message.from_user.id}](tg://user?id={message.from_user.id})"
         resp_mentions = " ".join(RESPONSIBLE_USERNAMES) if RESPONSIBLE_USERNAMES else ""
+        
+        # Форматируем текст заявки как цитату
+        quoted_body = "\n".join([f"> {line}" for line in app.text.split("\n")])
+        
         text = (
             f"{resp_mentions}\n\n"
             f"Заявка #{app_id}\n\n"
-            f"{app.text}\n\n"
+            f"{quoted_body}\n\n"
             f"Отчёт модератора {mention_mod}:\n\n"
             f"1️⃣ Укажите количество верных ответов:\n{q1}\n\n"
             f"2️⃣ Комментарий по прошедшему обзвону:\n{q2}\n\n"

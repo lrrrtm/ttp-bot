@@ -47,9 +47,12 @@ async def callback_handler(call: types.CallbackQuery):
 
         app_id, body_text = await ensure_application_exists(call)
         
+        # Форматируем текст заявки как цитату
+        quoted_body = "\n".join([f"> {line}" for line in body_text.split("\n")])
+
         new_text = (
             f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n"
-            f"{body_text}\n\n"
+            f"{quoted_body}\n\n"
             f"В работе: [{user_id}](tg://user?id={user_id})"
         )
 
@@ -86,9 +89,12 @@ async def callback_handler(call: types.CallbackQuery):
 
         app_id, body_text = await ensure_application_exists(call)
 
+        # Форматируем текст заявки как цитату
+        quoted_body = "\n".join([f"> {line}" for line in body_text.split("\n")])
+
         text = (
             f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n"
-            f"{body_text}\n\n"
+            f"{quoted_body}\n\n"
             f"❌ Отклонена до рассмотрения модератором "
             f"[{user_id}](tg://user?id={user_id})"
         )
@@ -141,9 +147,12 @@ async def callback_handler(call: types.CallbackQuery):
 
         app_id, body_text = await ensure_application_exists(call)
         
+        # Форматируем текст заявки как цитату
+        quoted_body = "\n".join([f"> {line}" for line in body_text.split("\n")])
+
         approved_text = (
             f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n"
-            f"{body_text}\n\n"
+            f"{quoted_body}\n\n"
             f"✅ Одобрена администратором "
             f"[{user_id}](tg://user?id={user_id})"
         )
@@ -171,9 +180,12 @@ async def callback_handler(call: types.CallbackQuery):
 
         app_id, body_text = await ensure_application_exists(call)
         
+        # Форматируем текст заявки как цитату
+        quoted_body = "\n".join([f"> {line}" for line in body_text.split("\n")])
+
         declined_text = (
             f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n"
-            f"{body_text}\n\n"
+            f"{quoted_body}\n\n"
             f"❌ Отклонена после рассмотрения администратором "
             f"[{user_id}](tg://user?id={user_id})"
         )
