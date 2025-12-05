@@ -4,3 +4,5 @@ python-dotenv
 aiomysql
 cryptography
 greenlet
+fastapi
+uvicorn
