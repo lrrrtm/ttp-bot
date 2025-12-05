@@ -19,6 +19,7 @@ async def receive_webhook(request: Request):
         realname = data.get("realname", "")
         age = data.get("age", "")
         contact = data.get("contact", "")
+        row_link = data.get("row_link", "")
 
         text = (
             f"🎮 Ник: {nickname}\n"
@@ -27,6 +28,9 @@ async def receive_webhook(request: Request):
             f"📆 Возраст: {age}\n\n"
             f"✉️ Контакт: {contact}"
         )
+        
+        if row_link:
+            text += f"\n\n<a href='{row_link}'>📑 Открыть в таблице</a>"
 
         # 1. Создаем заявку в БД (пока без message_id)
         app_id = await crud.create_application(
@@ -38,7 +42,8 @@ async def receive_webhook(request: Request):
             server=server,
             realname=realname,
             age=age,
-            contact=contact
+            contact=contact,
+            spreadsheet_link=row_link
         )
 
         # 2. Отправляем сообщение в Telegram
@@ -48,7 +53,8 @@ async def receive_webhook(request: Request):
             chat_id=GROUP_CHAT_ID,
             text=new_text,
             message_thread_id=TOPIC_NEW_ID,
-            reply_markup=inline.get_new_app_keyboard(app_id)
+            reply_markup=inline.get_new_app_keyboard(app_id),
+            parse_mode="HTML"
         )
 
         # 3. Обновляем message_id в БД

@@ -29,6 +29,7 @@ class Application(Base):
     realname = Column(String(255), nullable=True)
     age = Column(String(50), nullable=True)
     contact = Column(String(255), nullable=True)
+    spreadsheet_link = Column(String(500), nullable=True)
 
     status = Column(String(50))
     moderator_id = Column(BigInteger, nullable=True)

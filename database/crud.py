@@ -84,7 +84,7 @@ async def update_user_report_step(user_id, step, answer_text):
                 user.pending_report_step = 4
             await session.commit()
 
-async def create_application(text, chat_id, topic_id, message_id, nickname=None, server=None, realname=None, age=None, contact=None):
+async def create_application(text, chat_id, topic_id, message_id, nickname=None, server=None, realname=None, age=None, contact=None, spreadsheet_link=None):
     async with get_session() as session:
         now = datetime.utcnow().isoformat()
         app = Application(
@@ -94,6 +94,7 @@ async def create_application(text, chat_id, topic_id, message_id, nickname=None,
             realname=realname,
             age=age,
             contact=contact,
+            spreadsheet_link=spreadsheet_link,
             status='new',
             created_at=now,
             updated_at=now,
