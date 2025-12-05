@@ -1,4 +1,6 @@
 from datetime import date
+import random
+import aiohttp
 from aiogram import types
 from aiogram.filters import Command
 from loader import dp, bot
@@ -77,3 +79,31 @@ async def cmd_stats(message: types.Message):
             text.append(f"{mention} — {cnt} заявок")
 
     await message.reply("\n".join(text), parse_mode="Markdown")
+
+@dp.message(Command("fake"))
+async def cmd_fake(message: types.Message):
+    if not is_super_admin(message.from_user.id):
+        return
+
+    random_id = random.randint(100, 999)
+    payload = {
+        "nickname": f"Player_{random_id}",
+        "server": "Polit 1",
+        "realname": f"TestUser_{random_id}",
+        "age": str(random.randint(14, 30)),
+        "contact": f"@test_user_{random_id}"
+    }
+
+    url = "http://127.0.0.1:8000/webhook"
+    
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, json=payload) as resp:
+                if resp.status == 200:
+                    data = await resp.json()
+                    await message.reply(f"✅ Тестовая заявка отправлена!\nApp ID: {data.get('app_id')}")
+                else:
+                    text = await resp.text()
+                    await message.reply(f"❌ Ошибка API: {resp.status}\n{text}")
+    except Exception as e:
+        await message.reply(f"❌ Ошибка соединения: {e}")
