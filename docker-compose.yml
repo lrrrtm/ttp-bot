@@ -11,6 +11,8 @@ services:
       MYSQL_PORT: 3306
     depends_on:
       - db
+    ports:
+      - "8000:8000"
     command: ["/bin/sh", "-c", "sleep 10 && python main.py"]
 
   db:

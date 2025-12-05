@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import uvicorn
 from loader import dp, bot
 from database.db import init_db
 import handlers.commands
@@ -8,6 +9,12 @@ import handlers.callbacks
 import handlers.group
 import handlers.private
 from config import GROUP_CHAT_ID, TOPIC_NEW_ID
+from api import app
+
+async def start_api():
+    config = uvicorn.Config(app, host="0.0.0.0", port=8000, log_level="info")
+    server = uvicorn.Server(config)
+    await server.serve()
 
 async def main():
     logging.basicConfig(level=logging.INFO)
@@ -20,7 +27,12 @@ async def main():
         logging.error(f"Не удалось отправить сообщение о перезапуске: {e}")
 
     print("Бот запущен. Нажми Ctrl+C для остановки.")
-    await dp.start_polling(bot)
+    
+    # Запускаем бота и API параллельно
+    await asyncio.gather(
+        dp.start_polling(bot),
+        start_api()
+    )
 
 if __name__ == "__main__":
     asyncio.run(main())
