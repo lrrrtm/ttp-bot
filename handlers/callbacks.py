@@ -218,6 +218,7 @@ async def callback_handler(call: types.CallbackQuery):
             return
 
         app_id, body_text = await ensure_application_exists(call)
+        app = await crud.get_application(app_id)
         
         # Форматируем текст заявки как цитату
         safe_body = html.escape(body_text)
