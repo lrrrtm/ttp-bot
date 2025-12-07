@@ -4,6 +4,7 @@ from loader import bot
 from database import crud
 from keyboards import inline
 from config import GROUP_CHAT_ID, TOPIC_NEW_ID
+from utils import format_application_text
 
 app = FastAPI()
 
@@ -13,7 +14,7 @@ async def receive_webhook(request: Request):
         data = await request.json()
         logging.info(f"Received webhook data: {data}")
 
-        # Формируем текст заявки из полученных данных
+        # Получаем сырые данные
         nickname = data.get("nickname", "")
         server = data.get("server", "")
         realname = data.get("realname", "")
@@ -21,21 +22,9 @@ async def receive_webhook(request: Request):
         contact = data.get("contact", "")
         row_link = data.get("row_link", "")
 
-        text = (
-            f"🎮 Ник: {nickname}\n"
-            f"🌐 Сервер: {server}\n\n"
-            f"👤 Имя: {realname}\n"
-            f"📆 Возраст: {age}\n\n"
-            f"✉️ Контакт: {contact}"
-        )
-        
-        if row_link:
-            # text += f"\n\n<a href='{row_link}'>📑 Открыть в таблице</a>"
-            pass
-
-        # 1. Создаем заявку в БД (пока без message_id)
+        # 1. Создаем заявку в БД (сохраняем только сырые данные, text пустой)
         app_id = await crud.create_application(
-            text=text,
+            text="", 
             chat_id=GROUP_CHAT_ID,
             topic_id=TOPIC_NEW_ID,
             message_id=0,  # Будет обновлено после отправки сообщения
@@ -47,8 +36,10 @@ async def receive_webhook(request: Request):
             spreadsheet_link=row_link
         )
 
-        # 2. Отправляем сообщение в Telegram
-        new_text = f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n{text}"
+        # 2. Формируем текст для отправки в Telegram
+        formatted_body = format_application_text(nickname, server, realname, age, contact)
+        new_text = f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n{formatted_body}"
+        
         if row_link:
             new_text += f"\n\n<a href='{row_link}'>📑 Открыть в таблице</a>"
         

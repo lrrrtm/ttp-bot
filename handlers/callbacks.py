@@ -5,6 +5,7 @@ from loader import dp, bot
 from database import crud
 from keyboards import inline
 from config import GROUP_CHAT_ID, TOPIC_IN_WORK_ID, TOPIC_DECLINED_ID, TOPIC_APPROVED_ID
+from utils import format_application_text
 
 async def ensure_application_exists(call: types.CallbackQuery):
     """Создаёт заявку в БД, если она ещё не создана (для старых сообщений)."""
@@ -40,14 +41,20 @@ async def callback_handler(call: types.CallbackQuery):
         await call.answer("Недостаточно прав.")
         return
 
+    def get_body_text(app, fallback_text):
+        if app.nickname:
+            return format_application_text(app.nickname, app.server, app.realname, app.age, app.contact)
+        return app.text or fallback_text
+
     # ============ ВЗЯТЬ В РАБОТУ ============
     if data.startswith("take:"):
         if role not in ("moderator", "admin"):
             await need_moderator()
             return
 
-        app_id, body_text = await ensure_application_exists(call)
+        app_id, text_from_ensure = await ensure_application_exists(call)
         app = await crud.get_application(app_id)
+        body_text = get_body_text(app, text_from_ensure)
         
         # Форматируем текст заявки как цитату
         safe_body = html.escape(body_text)
@@ -96,8 +103,9 @@ async def callback_handler(call: types.CallbackQuery):
             await need_moderator()
             return
 
-        app_id, body_text = await ensure_application_exists(call)
+        app_id, text_from_ensure = await ensure_application_exists(call)
         app = await crud.get_application(app_id)
+        body_text = get_body_text(app, text_from_ensure)
 
         # Форматируем текст заявки как цитату
         safe_body = html.escape(body_text)
@@ -162,8 +170,9 @@ async def callback_handler(call: types.CallbackQuery):
             await need_moderator()
             return
 
-        app_id, body_text = await ensure_application_exists(call)
+        app_id, text_from_ensure = await ensure_application_exists(call)
         app = await crud.get_application(app_id)
+        body_text = get_body_text(app, text_from_ensure)
         
         # Форматируем текст заявки как цитату
         safe_body = html.escape(body_text)
@@ -217,8 +226,9 @@ async def callback_handler(call: types.CallbackQuery):
             await need_moderator()
             return
 
-        app_id, body_text = await ensure_application_exists(call)
+        app_id, text_from_ensure = await ensure_application_exists(call)
         app = await crud.get_application(app_id)
+        body_text = get_body_text(app, text_from_ensure)
         
         # Форматируем текст заявки как цитату
         safe_body = html.escape(body_text)
