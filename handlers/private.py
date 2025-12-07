@@ -4,6 +4,7 @@ from loader import dp, bot
 from database import crud
 from keyboards import inline
 from config import GROUP_CHAT_ID, TOPIC_AWAIT_REVIEW_ID, RESPONSIBLE_USERNAMES
+from utils import format_application_text
 
 @dp.message(lambda m: m.chat.type == "private")
 async def handle_private(message: types.Message):
@@ -62,8 +63,14 @@ async def handle_private(message: types.Message):
         mention_mod = f"@{message.from_user.username}" if message.from_user.username else f"<a href='tg://user?id={message.from_user.id}'>{message.from_user.id}</a>"
         resp_mentions = " ".join(RESPONSIBLE_USERNAMES) if RESPONSIBLE_USERNAMES else ""
         
+        # Формируем текст заявки
+        if app.nickname:
+            body_text = format_application_text(app.nickname, app.server, app.realname, app.age, app.contact)
+        else:
+            body_text = app.text or ""
+
         # Форматируем текст заявки как цитату
-        safe_body = html.escape(app.text)
+        safe_body = html.escape(body_text)
         
         text = (
             f"{resp_mentions}\n\n"
