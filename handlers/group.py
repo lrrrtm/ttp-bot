@@ -10,6 +10,8 @@ async def auto_format_new_app(message: types.Message):
         return
     if message.message_thread_id != TOPIC_NEW_ID:
         return
+    if message.reply_to_message:
+        return
 
     full_text = message.text or ""
     if not full_text.strip():
