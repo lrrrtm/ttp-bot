@@ -22,7 +22,12 @@ async def main():
     await init_db()
     
     try:
-        await bot.send_message(chat_id=GROUP_CHAT_ID, message_thread_id=TOPIC_SERVICE_MESSAGES_ID, text="🔄 Бот был перезапущен")
+        await bot.send_message(
+            chat_id=GROUP_CHAT_ID, 
+            message_thread_id=TOPIC_SERVICE_MESSAGES_ID, 
+            text="🔄 Бот был перезапущен",
+            disable_notification=True
+        )
     except Exception as e:
         logging.error(f"Не удалось отправить сообщение о перезапуске: {e}")
 
