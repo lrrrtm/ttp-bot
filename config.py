@@ -11,6 +11,7 @@ TOPIC_IN_WORK_ID = int(os.getenv("TOPIC_IN_WORK_ID"))
 TOPIC_DECLINED_ID = int(os.getenv("TOPIC_DECLINED_ID"))
 TOPIC_AWAIT_REVIEW_ID = int(os.getenv("TOPIC_AWAIT_REVIEW_ID"))
 TOPIC_APPROVED_ID = int(os.getenv("TOPIC_APPROVED_ID"))
+TOPIC_SERVICE_MESSAGES_ID = int(os.getenv("TOPIC_SERVICE_MESSAGES_ID"))
 
 # Парсим список ID администраторов
 admins_str = os.getenv("SUPER_ADMINS", "")

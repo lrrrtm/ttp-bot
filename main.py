@@ -8,7 +8,7 @@ import handlers.admin
 import handlers.callbacks
 import handlers.group
 import handlers.private
-from config import GROUP_CHAT_ID, TOPIC_NEW_ID
+from config import TOPIC_NEW_ID, TOPIC_SERVICE_MESSAGES_ID
 from api import app
 
 async def start_api():
@@ -22,7 +22,7 @@ async def main():
     await init_db()
     
     try:
-        await bot.send_message(chat_id=GROUP_CHAT_ID, message_thread_id=TOPIC_NEW_ID, text="🔄 Бот был перезапущен")
+        await bot.send_message(chat_id=TOPIC_SERVICE_MESSAGES_ID, message_thread_id=TOPIC_NEW_ID, text="🔄 Бот был перезапущен")
     except Exception as e:
         logging.error(f"Не удалось отправить сообщение о перезапуске: {e}")
 
