@@ -226,7 +226,7 @@ async def callback_handler(call: types.CallbackQuery):
         # Упоминание админа
         admin_mention = f"@{call.from_user.username}" if call.from_user.username else f"<a href='tg://user?id={user_id}'>{user_id}</a>"
 
-        declined_text = (
+        approved_text = (
             f"⚡ НОВАЯ ЗАЯВКА #{app_id} ⚡\n\n"
             f"<blockquote>{safe_body}</blockquote>\n\n"
             f"❌ Отклонена после рассмотрения администратором "
